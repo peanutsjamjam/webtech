@@ -5,12 +5,15 @@ import { expect, test, vi } from 'vitest'
 import { Page1 } from './Page1'
 import { myrender } from './testsetup'
 
-
+// Btn0 Btn1 が存在する。
 test("Page1 test1", async () => {
   myrender(<Page1 />);
   expect(screen.getByRole('button', { name: 'Btn0'})).toBeInTheDocument();
   expect(screen.getByRole('button', { name: 'Btn1'})).toBeInTheDocument();
 });
+
+// textboxに1と入力すると BtnInner1 が出現し、それをクリックすると
+// inner1text が "1" から "*1*" に変化する。
 test("Page1 test2", async () => {
   myrender(<Page1 />);
   const user = userEvent.setup();
@@ -18,16 +21,18 @@ test("Page1 test2", async () => {
   const input = screen.getByRole('textbox');
   await user.type(input, '1');
 
+  const text = screen.getByTestId("inner1text");
+  expect(text).toHaveTextContent(/^1$/);
+
   const btn1 = screen.getByRole('button', { name: 'BtnInner1'});
   await user.click(btn1);
 
-  const text = screen.getByTestId("inner1text");
   expect(text).toHaveTextContent(/^\*1\*$/);
 });
 
-const utilFunc0 = vi.hoisted(() => vi.fn(() => "return value0x"));
-const utilFunc1 = vi.hoisted(() => vi.fn(() => "return value1x"));
 
+const utilFunc0 = vi.hoisted(() => vi.fn(() => "return value0"));
+const utilFunc1 = vi.hoisted(() => vi.fn(() => "return value1"));
 vi.mock('./util', () => {
   return {
     utilFunc0,
@@ -45,12 +50,12 @@ test("Page1 test3", async () => {
   const btn0 = screen.getByRole('button', {name: 'Btn0'});
   await user.click(btn0);
   const text0 = screen.getByTestId("text0");
-  expect(text0).toHaveTextContent("return value0");
+  expect(text0).toHaveTextContent(/^return value0$/);
 
   const btn1 = screen.getByRole('button', {name: 'Btn1'});
   await user.click(btn1);
   const text1 = screen.getByTestId("text1");
-  expect(text1).toHaveTextContent("Return Value1");
+  expect(text1).toHaveTextContent(/^Return Value1$/);
 
 });
 
@@ -65,11 +70,11 @@ test("Page1 test4", async () => {
   const btn0 = screen.getByRole('button', {name: 'Btn0'});
   await user.click(btn0);
   const text0 = screen.getByTestId("text0");
-  expect(text0).toHaveTextContent("Return Value0");
+  expect(text0).toHaveTextContent(/^Return Value0$/);
 
   const btn1 = screen.getByRole('button', {name: 'Btn1'});
   await user.click(btn1);
   const text1 = screen.getByTestId("text1");
-  expect(text1).toHaveTextContent("return value1");
+  expect(text1).toHaveTextContent(/^return value1$/);
 
 });

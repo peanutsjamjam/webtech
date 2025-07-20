@@ -27,11 +27,9 @@ export function Page1() {
   const [text0, setText0] = useState("");
   const [text1, setText1] = useState("");
   const onBtn0 = () => {
-    //console.log("onBtn0()");
     setText0(utilFunc0());
   }
   const onBtn1 = () => {
-    //console.log("onBtn1() " + inp);
     setText1(utilFunc1());
   }
   return (
